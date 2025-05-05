@@ -1,0 +1,7 @@
+{
+  "first_name": "Justin",
+  "last_name": "NADILA",
+  "email": "JohnGalito@gmail.com",
+  "phone_number": "23495",
+  "address": "Butuan"
+}
