@@ -2,7 +2,7 @@
 
 from django.db import models
 from .exam_models import Chat
-
+from .product_models import Product, Cart, Checkout, Payment
 # Create your models here.
 
 class Contact(models.Model):

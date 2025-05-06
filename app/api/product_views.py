@@ -1,27 +1,43 @@
 # api/product_views.py
 
-#from django.shortcuts import render
-#from .models import Product
-
-#def product_list(request):
-    # Fetch all products from the database
-#    products = Product.objects.all()
-#    return render(request, 'products.html', {'products': products})
-
-#product_views.py
-from rest_framework import viewsets
-from .product_models import Product, Cart, Checkout
-from .serializers import ProductSerializer, CartSerializer, CheckoutSerializer
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from .product_models import Product, Cart, CartItem, Checkout, Payment
+from . import serializers
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    serializer_class = serializers.ProductSerializer
 
 class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
-    serializer_class = CartSerializer
+    serializer_class = serializers.CartSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            cart = self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data, 
+                status=status.HTTP_201_CREATED, 
+                headers=headers
+            )
+        except serializers.ValidationError as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def perform_create(self, serializer):
+        return serializer.save()
 
 class CheckoutViewSet(viewsets.ModelViewSet):
     queryset = Checkout.objects.all()
-    serializer_class = CheckoutSerializer
+    serializer_class = serializers.CheckoutSerializer
+
+class PaymentViewSet(viewsets.ModelViewSet):
+    queryset = Payment.objects.all()
+    serializer_class = serializers.PaymentSerializer
 

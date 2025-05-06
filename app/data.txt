@@ -1,7 +1,6 @@
 {
-  "first_name": "Justin",
-  "last_name": "NADILA",
-  "email": "JohnGalito@gmail.com",
-  "phone_number": "23495",
-  "address": "Butuan"
+    "name": "Laptop",
+    "description": "High-performance laptop",
+    "price": 999.99,
+    "stock": 50
 }
