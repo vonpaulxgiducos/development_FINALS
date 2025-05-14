@@ -1,4 +1,4 @@
-#serializer.py
+# Modified serializers.py
 from rest_framework import serializers
 from .product_models import Product, Cart, CartItem, Checkout, Payment
 
@@ -30,25 +30,35 @@ class CartSerializer(serializers.ModelSerializer):
         product = validated_data.pop('product')
         quantity = validated_data.pop('quantity')
         
-        cart = Cart.objects.create()
-        cart_item = CartItem.objects.create(
-            product=product,
-            quantity=quantity
-        )
-        cart.items.add(cart_item)
-        return cart
+        # Check if an existing cart with this product exists
+        existing_item = CartItem.objects.filter(product=product).first()
+        
+        if existing_item:
+            # Update existing item quantity instead of creating a new one
+            existing_item.quantity = quantity
+            existing_item.save()
+            return existing_item.cart_set.first() or Cart.objects.create()
+        else:
+            # Create new cart and item
+            cart = Cart.objects.create()
+            cart_item = CartItem.objects.create(
+                product=product,
+                quantity=quantity
+            )
+            cart.items.add(cart_item)
+            return cart
 
 class CheckoutSerializer(serializers.ModelSerializer):
     cart = serializers.PrimaryKeyRelatedField(queryset=Cart.objects.all())
-    total_price = serializers.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        read_only=True
-    )
+    customer_name = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
+    phone = serializers.CharField(required=True)
+    shipping_address = serializers.CharField(required=True)
 
     class Meta:
         model = Checkout
-        fields = ['id', 'cart', 'total_price', 'created_at']
+        fields = ['id', 'cart', 'total_price', 'customer_name', 'email', 
+                 'phone', 'shipping_address', 'notes', 'status', 'created_at']
 
     def create(self, validated_data):
         cart = validated_data.get('cart')
@@ -60,15 +70,28 @@ class CheckoutSerializer(serializers.ModelSerializer):
             for item in cart.items.all()
         )
         
-        return Checkout.objects.create(
+        checkout = Checkout.objects.create(
             cart=cart,
-            total_price=total_price
+            total_price=total_price,
+            customer_name=validated_data.get('customer_name'),
+            email=validated_data.get('email'),
+            phone=validated_data.get('phone'),
+            shipping_address=validated_data.get('shipping_address'),
+            notes=validated_data.get('notes', ''),
+            status='pending'
         )
+        
+        return checkout
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = ['id', 'checkout', 'payment_method', 'payment_status', 'payment_date']
+        
+        fields = '__all__'
 
 # Add this line at the end of the file
 __all__ = ['ProductSerializer', 'CartSerializer', 'CartItemSerializer', 'CheckoutSerializer']
+
+
+        

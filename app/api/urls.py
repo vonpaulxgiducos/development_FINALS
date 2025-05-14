@@ -15,6 +15,12 @@ urlpatterns = [
     path('contact/<int:contact_id>/', ContactListView.as_view(), name='contact_detail'),
     path('contacts/', ContactListView.as_view(), name='contact_list'),
     path('contacts/<int:contact_id>/', ContactUpdateDetailView.as_view(), name='contact_update_detail'),
+    path('payment/', TemplateView.as_view(template_name='payment.html'), name='payment'),
+    path('payment-success/', TemplateView.as_view(template_name='payment-success.html'), name='payment-success'),
     path('', include(router.urls)),  # Include router URLs
+    # path('cart/clear_item/', views.clear_item, name='clear_item'),
     # REMOVE THIS LINE: path('api/', include('api.urls')),  
 ]
+
+
+    

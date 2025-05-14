@@ -1,0 +1,67 @@
+  
+gunicorn --reload --bind 0.0.0.0:8004 app.wsgi:application
+
+mariadb -u giducos2 -p
+
+----------ADMIN----------
+sudo service mariadb start
+sudo service nginx status
+sudo service nginx start 
+
+python manage.py runserver 0.0.0.0:8004
+python manage.py dbshell
+--------------------------
+
+select * from api_product;
+DELETE FROM api_product WHERE id = 1;
+
+
+DELETE FROM api_cart_items WHERE id = 28;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+python manage.py makemigrations api
+curl -X POST 0.0.0.0:8004/api/contact/ -H "Content-Type: application/json" -d @data.txt
+
+cd app
+  613  curl -X POST https://0.0.0.0:8004/api/cart/ -H "Content-Type: application/json" \     -d @data.txt
+  614  curl -X POST http://127.0.0.1:8004/api/cart/ \     -H "Content-Type: application/json" \     -d @data.txt
+
+  python manage.py makemigrations api
+  python manage.py migrate api
+  
+  649  curl -X POST http://0.0.0.0:8004/products/ \-H "Content-Type: application/json" \-d '{  "name": "Sample Product",  "description": "This is a sample product.",  "price": 19.99,  "stock": 100}'
+  650  curl -X POST http://0.0.0.0:8004/products/ -H "Content-Type: application/json" -d '{
+  651    "name": "Sample Product",
+  652    "description": "This is a sample product.",
+  653    "price": 19.99,
+  654    "stock": 100
+  655  }'
+  656  curl -X POST http://0.0.0.0:8004/cart-items/ -H "Content-Type: application/json" -d '{
+  657    "product": 1,  # Replace with the Product ID
+  658    "quantity": 2
+  659  curl -X POST http://0.0.0.0:8004/products/ \-H "Content-Type: application/json" \-d '{  "name": "Sample Product",  "description": "This is a sample product.",  "price": 19.99,  "stock": 100}'
+  660  mariadb -u giducos1 -p
+
+curl -X POST http://0.0.0.0:8004/api/cart/ -H "Content-Type: application/json" -d '{
+  898      "product_id": 1,
+  899      "quantity": 2
+  900  }'
+
+  890  curl -X POST http://0.0.0.0:8004/api/products/ -H "Content-Type: application/json" -d '{
+  891      "name": "Test Product",
+  892      "description": "Test Description",
+  893      "price": "19.99",
+  894      "stock": 10
+  895  }'

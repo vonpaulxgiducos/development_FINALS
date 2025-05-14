@@ -162,67 +162,8 @@ class CheckoutViewSet(viewsets.ModelViewSet):
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = serializers.PaymentSerializer
-
-    @action(detail=False, methods=['post'], url_path='process-payment')
-    def process_payment(self, request):
-        """
-        Process a payment and link it to a checkout.
-        """
-        try:
-            # Extract data from the request
-            checkout_id = request.data.get('checkout_id')
-            payment_method = request.data.get('payment_method')
-            card_name = request.data.get('card_name', None)
-            card_number = request.data.get('card_number', None)
-            expiry_date = request.data.get('expiry_date', None)
-            amount = request.data.get('amount')
-
-            # Validate required fields
-            if not checkout_id or not payment_method or not amount:
-                return Response(
-                    {"error": "Missing required fields: checkout_id, payment_method, or amount"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-            # Fetch the corresponding checkout
-            try:
-                checkout = Checkout.objects.get(id=checkout_id)
-            except Checkout.DoesNotExist:
-                return Response(
-                    {"error": f"Checkout with ID {checkout_id} not found"},
-                    status=status.HTTP_404_NOT_FOUND
-                )
-
-            # Create a payment record
-            payment = Payment.objects.create(
-                checkout=checkout,
-                payment_method=payment_method,
-                card_name=card_name,
-                card_number=card_number,
-                expiry_date=expiry_date,
-                amount=amount,
-                status='completed'
-            )
-
-            # Update the checkout status to 'paid'
-            checkout.status = 'paid'
-            checkout.save()
-
-            return Response(
-                {
-                    "message": "Payment processed successfully",
-                    "payment_id": payment.id,
-                    "checkout_id": checkout.id,
-                    "amount": amount,
-                },
-                status=status.HTTP_201_CREATED
-            )
-
-        except Exception as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+    
 
 
 
+product_views

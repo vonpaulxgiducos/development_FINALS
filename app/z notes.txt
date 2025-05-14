@@ -1,0 +1,27 @@
+
+
+
+
+
+Badminton eCommerce Category Structure
+
+1. Rackets 
+Beginner Rackets
+Intermediate Rackets
+Professional Rackets
+
+2. Shuttlecocks
+Feather Shuttlecocks
+Nylon Shuttlecocks
+
+3. Apparel
+Shirts 
+Shorts 
+Shoes
+
+4. Accessories
+Grips & Strings
+Bags
+Nets 
+
+can you make a menu.html for my menu page of badminton ecommerce, make it attractive and nice like a shoes website
